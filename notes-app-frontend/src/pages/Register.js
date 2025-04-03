@@ -3,7 +3,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, Link } from 'react-router-dom';
 import { register } from '../features/authSlice';
 import { motion } from 'framer-motion';
-import { Container, Row, Col, Form, Button, Alert, Card } from 'react-bootstrap';
+import { Container, Row, Col, Form, Button, Card } from 'react-bootstrap';
+import { toast } from 'react-toastify';
 
 const Register = () => {
     const [username, setUsername] = useState('');
@@ -17,16 +18,17 @@ const Register = () => {
     const handleSubmit = (e) => {
         e.preventDefault();
         if (password !== confirmPassword) {
-            alert("Passwords don't match");
+            toast.error("Passwords don't match");
             return;
         }
         dispatch(register({ username, email, password }))
             .unwrap()
             .then(() => {
-                alert('Registration successful! Please login.');
+                toast.success('Registration successful! Please login.');
                 navigate('/login');
             })
             .catch((err) => {
+                toast.error(err.message || 'Registration failed');
                 console.error('Registration error:', err);
             });
     };
@@ -48,12 +50,6 @@ const Register = () => {
                                         <h2 className="fw-bold">Create Account</h2>
                                         <p className="text-muted">Join Keep Notes today</p>
                                     </div>
-
-                                    {error && (
-                                        <Alert variant="danger" className="text-center">
-                                            {error}
-                                        </Alert>
-                                    )}
 
                                     <Form onSubmit={handleSubmit}>
                                         <Form.Group className="mb-3">

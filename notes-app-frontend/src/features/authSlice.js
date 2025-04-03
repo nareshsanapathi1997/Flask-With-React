@@ -11,14 +11,14 @@ const initialState = {
 // Async thunks
 export const login = createAsyncThunk(
     'auth/login',
-    async ({ email, password }, { rejectWithValue }) => {
+    async ({ email, password }, { fulfillWithValue,rejectWithValue }) => {
         try {
             const response = await axios.post('http://localhost:5000/login', {
                 email,
                 password,
             });
             localStorage.setItem('token', response.data.access_token);
-            return response.data.user;
+            return fulfillWithValue(response.data.user);
         } catch (error) {
             return rejectWithValue(error.response?.data?.message || 'Login failed');
         }
